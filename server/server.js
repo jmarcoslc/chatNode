@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var path = require("path");
 var io = require('socket.io')(http);
 
-var port = normalizePort(process.env.port || 3000);
+var port = process.env.PORT || '3000';
 
 app.get('/', function(req, res){
   res.sendFile(path.normalize(__dirname + "/../static/index.html"));
@@ -21,5 +21,5 @@ io.on('connection', function(socket){
 });
 
 http.listen(port, function(){
-  console.log('listening on *:3000');
+  console.log('listening on *:'+port);
 });
