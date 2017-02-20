@@ -11,20 +11,44 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      .btn_fich {
+      	width: 150px;
+      	float: left;
+      }
     </style>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 	<script>
 	  var socket = io();
 	  $(document).ready(function() {
-			$('form').submit(function(){
+		$('form').submit(function() {
 		    socket.emit('chat_message', $('#m').val());
 		    $('#m').val('');
 		    return false;
 		  });
 		  socket.on('chat_message', function(msg){
 		    $('#messages').append($('<li>').text(msg));
-		  });
+		});
+
+		  socket.on('connect', function(){
+		    var delivery = new Delivery(socket);
+		    alert("conecta socket files")
+		 
+		    delivery.on('delivery.connect',function(delivery){
+		      $("#btn_fich").click(function(evt){
+		      	//"input[type=file]"
+		        var file = $(this)[0].files[0];
+		        var extraParams = {foo: 'bar'};
+		        console.log(file, extraParams);
+		        delivery.send(file, extraParams);
+		        evt.preventDefault();
+		      });
+		    });
+		 
+		    delivery.on('send.success',function(fileUID){
+		      console.log("file was successfully sent.");
+		    });
+  		});
 	  });
 	</script>
   </head>
@@ -32,6 +56,7 @@
   <form>
     <ul id="messages"></ul>
       <input id="m" autocomplete="off" /><button class="btn">Send</button>
+      <input id="f" type="file"><input id="btn_fich" type="button" value="Enviar fichero">
   </form>
   </body>
 </html>

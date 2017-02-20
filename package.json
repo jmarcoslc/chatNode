@@ -13,6 +13,7 @@
   "author": "Jose Marcos Leyva Castro",
   "license": "ISC",
   "dependencies": {
+    "delivery": "0.0.6",
     "express": "^4.14.1",
     "socket.io": "^1.7.2"
   }
