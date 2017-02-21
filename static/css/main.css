@@ -153,6 +153,7 @@
 
 .chat-pan-content:hover {
 	background-color: #F7F7F7;
+	cursor: pointer;
 }
 
 .chat-active {
