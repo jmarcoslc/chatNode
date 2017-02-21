@@ -1,8 +1,25 @@
+var user_name = "Anonymouse";
+
+function addListeners() {
+	$(".modal-footer .btn").click(function() {
+		user_name = $('.form_username_input').val();
+		alert(user_name);
+		$(".user-name").text(user_name);
+		$("#modal1").modal("close");
+		$(".login").css({
+			display: 'none'
+		});
+	});
+}
+
 $(document).ready(function() {
-var socket = io();
+	$('.modal').modal();
+	$('#modal1').modal('open');
+	addListeners();
+	var socket = io();
 
 	$('form').submit(function() {
-	    socket.emit('chat_message', {msg:$('#input-message-content').val(), user:"Marcos"});
+	    socket.emit('chat_message', {msg:$('#input-message-content').val(), user:user_name});
 	    $('#input-message-content').val('');
 	    return false;
 	  });
@@ -39,4 +56,4 @@ var socket = io();
 	      console.log("file was successfully sent.");
 	    });
 		});*/
-	});
+});
