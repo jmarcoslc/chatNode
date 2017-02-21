@@ -15,6 +15,10 @@
 	display: table;
 }
 
+.fixed {
+	position: fixed;
+}
+
 .no-padding {
 	padding: 0px 0px 0px 0px !important;
 }
@@ -141,4 +145,47 @@
 	height: 10vh;
 	background-color: #F5F1EE;
 	padding: 1vh;
+}
+
+.chat-pan-content {
+	height: 10vh;
+}
+
+.chat-pan-content:hover {
+	background-color: #F7F7F7;
+}
+
+.chat-active {
+	/*background-color: #20d86d;*/
+	background-color: #CCC;
+	/*color: #FFF;*/
+}
+
+.section-footer input {
+	background-color: #FFF !important;
+	margin: 0px !important;
+	border-bottom: 0px !important;
+	height: 7.5vh !important;
+	padding: auto 10px !important;
+}
+
+.section-footer input:hover, .section-footer input:focus, .section-footer input:active {
+	border-bottom: 0px;
+	box-shadow: none !important;
+}
+
+.section-footer button.btn {
+	height: 7.5vh !important;
+	padding: 0px 2vw !important;
+	text-align: center;
+	border-radius: 0px !important;
+	box-shadow: none !important;
+}
+
+.section-footer button.btn i {
+	margin: 0px !important;
+	height: 7.5vh !important;
+/*	position: relative !important;
+	top: calc(50% - 3.75vh) !important;*/
+	line-height: 50%;
 }
