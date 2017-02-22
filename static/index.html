@@ -12,6 +12,7 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/delivery.js" type="text/javascript"></script>
     <script type="text/javascript" src="js/main.js"></script>
   </head>
   <body>
@@ -20,7 +21,7 @@
 	    <div class="modal-content">
 	      <h4>Login</h4>
 	        <div class="row">
-		    <form class="col s12">
+		    <form id="form_login" class="col s12">
 		      <div class="row">
 		        <div class="input-field col s6">
 		          <i class="material-icons prefix">perm_identity</i>
@@ -42,23 +43,23 @@
 			        <input type="file">
 			      </div>
 			      <div class="file-path-wrapper">
-			        <input class="file-path validate" type="text">
+			        <input class="file-path" type="text">
 			      </div>
 			    </div>
 		      </div>
-    		</form>
   		  </div>
 	    </div>
 	    <div class="modal-footer">
-	      <a href="#!" class="waves-effect btn"><i class="material-icons right">send</i>Login</a>
+	      <button id="login_btn" href="#!" class="waves-effect btn"><i class="material-icons right">send</i>Login</button>
 	    </div>
+	    </form>
 	  </div>
   	</div>
   	<div class="container-fluid">
 	  	<div class="row no-margin">
 	  		<div class="col s3 no-padding">
 	  			<div class="section-header section-header-l">
-	  				<img class="circle avatar" src="img/no-avatar.png">
+	  				<img id="self_avatar" class="circle avatar" src="img/no-avatar.png">
 	  				<span class="user-name">Anonymouse</span>
 	  			</div>
 	  			<div class="chats-wrapp">

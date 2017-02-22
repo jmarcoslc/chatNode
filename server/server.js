@@ -14,17 +14,17 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket){
-/*  var delivery = dl.listen(socket);
+  var delivery = dl.listen(socket);
   delivery.on('receive.success',function(file){
     var params = file.params;
-    fs.writeFile(path.normalize(__dirname + "/../static/"+file.name),file.buffer, function(err){
-      if(err){
+    fs.writeFile(path.normalize(__dirname + "/../static/img/avatars/"+file.name),file.buffer, function(err){
+      if(err) {
         console.log('File could not be saved.');
-      }else{
+      } else {
         console.log('File saved.');
       };
     });
-  });*/
+  });
   console.log('User conected');
   socket.on('disconnect', function(){
     console.log('User disconnected');
@@ -42,20 +42,6 @@ io.on('connection', function(socket){
     io.emit('writing', msg);
   });
 });
- 
-/*io.sockets.on('connection', function(socket){
-  
-  delivery.on('receive.success',function(file){
-    var params = file.params;
-    fs.writeFile(file.name,file.buffer, function(err){
-      if(err){
-        console.log('File could not be saved.');
-      }else{
-        console.log('File saved.');
-      };
-    });
-  });
-});*/
 
 http.listen(port, function(){
   console.log('listening on *:'+port);

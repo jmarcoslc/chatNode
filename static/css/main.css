@@ -71,7 +71,6 @@
 .avatar, .chat-avatar {
 	height: 6.5vh;
 	background-color: #FFF;
-	padding: 1vh;
 	position: relative;
 	top: calc(50% - 3.5vh);
 	margin-left: 10px;
