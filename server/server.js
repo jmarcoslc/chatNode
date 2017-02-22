@@ -30,7 +30,7 @@ io.on('connection', function(socket){
     console.log('User disconnected');
   });
   socket.on('chat_message', function(msg){
-    console.log('message: ' + msg);
+    console.log('Message from: ' + msg.user + " - " + msg.msg);
     io.emit('chat_message', msg);
   });
   socket.on('keepAlive', function(msg){
