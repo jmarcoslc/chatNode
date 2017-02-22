@@ -7,6 +7,7 @@ var target_chat = "main_chat";
 var target_chat_name = "";
 var self_main_chat_name = "";
 var users_online = new Array();
+var users_avatars = {"Chat general": "/img/no-avatar.png"};
 
 function addListeners(socket) {
 	$(".modal-footer .btn").click(function() {
@@ -24,13 +25,13 @@ function addListeners(socket) {
 	});
 
 	$('form').submit(function() {
-		socket.emit('chat_message', {target: target_chat, msg:$('#input-message-content').val(), user:user_name});
+		socket.emit('chat_message', {target: target_chat, msg:$('#input-message-content').val(), user:user_name, avtr:avatar});
 		$('#input-message-content').val('');
 		return false;
 	});
 
 	$('#input-message-content').keypress(function() {
-		socket.emit('writing', {target: target_chat, user:user_name})
+		socket.emit('writing', {target: target_chat, user:user_name, avtr:avatar})
 	});
 
 	$("#main_chat").click(function() {
@@ -43,7 +44,7 @@ function addListeners(socket) {
 function keepAlive(socket) {
 	var func_ka = function(){
 		if (logged) {
-			socket.emit('keepAlive', {user: user_name, stat: state});
+			socket.emit('keepAlive', {user: user_name, stat: state, avtr:avatar});
 		}
 	}
 
@@ -56,6 +57,7 @@ function changeChat() {
 	$(".chat-active").removeClass("chat-active");
 	$("#"+target_chat).addClass("chat-active");
 	$("#current-chat-name").text(target_chat_name);
+	$("#current-chat-image").attr("src", users_avatars[target_chat_name]);
 	$("#chat-content").text("");
 
 	$.each(chats[target_chat], function(index, msg){
@@ -202,8 +204,9 @@ $(document).ready(function() {
 	socket.on("keepAlive", function(msg) {
 		if (msg.user != user_name && $.inArray(msg.user, users_online) == -1) {
 			users_online.push(msg.user);
+			users_avatars[msg.user] = msg.avtr;
 			$('.chats-wrapp').append('<div id="'+msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+'_chat" class="chat-pan-content">\
-				<img class="circle chat-avatar '+msg.stat+'" src="'+avatar+'">\
+				<img class="circle chat-avatar '+msg.stat+'" src="'+msg.avtr+'">\
 				<span class="chat-name">'+msg.user+'</span>\
 				</div>'
 				)
