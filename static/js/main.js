@@ -11,7 +11,8 @@ function addListeners(socket) {
 	$(".modal-footer .btn").click(function() {
 		user_name = $('.form_username_input').val();
 		self_main_chat_name = user_name.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat";
-		state = $("#form_state option:selected").text();
+		state = $("#form_state").val();
+		$(".section-header-l img").addClass(state);
 		$(".user-name").text(user_name);
 		$("#modal1").modal("close");
 		$(".login").css({
@@ -19,6 +20,16 @@ function addListeners(socket) {
 		});
 		logged = true;
 		keepAlive(socket);
+	});
+
+	$('form').submit(function() {
+		socket.emit('chat_message', {target: target_chat, msg:$('#input-message-content').val(), user:user_name});
+		$('#input-message-content').val('');
+		return false;
+	});
+
+	$('#input-message-content').keypress(function() {
+		socket.emit('writing', {target: target_chat, user:user_name})
 	});
 
 	$("#main_chat").click(function() {
@@ -47,50 +58,31 @@ function changeChat() {
 	$("#chat-content").text("");
 
 	$.each(chats[target_chat], function(index, msg){
-		console.log(msg);
 		insertMessages(msg);
 	});
 }
 
 function insertMessages(msg) {
-	if (msg.target == target_chat) {
-		var msg_class = "message";
-		var wrap_right_class = "";
-		
-		if (msg.user == user_name) {
-			msg_class = "self-message";
-			wrap_right_class = " alg-right"
-		}
+	if (msg.target == target_chat || msg.target == self_main_chat_name) {
+			var msg_class = "message";
+			var wrap_right_class = "";
+			
+			if (msg.user == user_name) {
+				msg_class = "self-message";
+				wrap_right_class = " alg-right"
+			}
 
-	    $('#chat-content').append(
-	    	'<div class="message-wrapp'+wrap_right_class+'">\
-				<span class="'+msg_class+'">\
-					<span class="message-header">\
-						<span class="message-name">'+msg.user+'</span>\
+		    $('#chat-content').append(
+		    	'<div class="message-wrapp'+wrap_right_class+'">\
+					<span class="'+msg_class+'">\
+						<span class="message-header">\
+							<span class="message-name">'+msg.user+'</span>\
+						</span>\
+						<div class="message-content">\
+							<div class="message-text">'+msg.msg+'</div>\
+						</div>\
 					</span>\
-					<div class="message-content">\
-						<div class="message-text">'+msg.msg+'</div>\
-					</div>\
-				</span>\
-			</div>');
-	} else if (msg.target == self_main_chat_name) {
-		var target = msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat";
-		if (chats.hasOwnProperty(target)) {
-			chats[target].push(msg);
-		} else {
-			chats[target] = new Array();
-			chats[target].push(msg);
-		}
-		console.log(chats);
-	} else if (msg.target == "main_chat") {
-		var target = msg.target;
-		if (chats.hasOwnProperty(target)) {
-			chats[target].push(msg);
-		} else {
-			chats[target] = new Array();
-			chats[target].push(msg);
-		}
-		console.log(chats);
+				</div>');
 	}
 }
 
@@ -101,22 +93,98 @@ $(document).ready(function() {
 	$('select').material_select();
 	addListeners(socket);
 
-	$('form').submit(function() {
-	    socket.emit('chat_message', {target: target_chat, msg:$('#input-message-content').val(), user:user_name});
-	    $('#input-message-content').val('');
-	    return false;
+	socket.on('writing', function(msg) {
+		if (target_chat == msg.target && msg.user != user_name) {
+			$("#writing").text(msg.user + " está escribiendo...")
+			setTimeout(function() {
+				$("#writing").text("");
+			}, 5000);
+		}
 	});
 
-	socket.on('chat_message', insertMessages);
+	socket.on('chat_message', function(msg){
+		if (msg.target == target_chat) {
+			var msg_class = "message";
+			var wrap_right_class = "";
+			
+			if (msg.user == user_name) {
+				msg_class = "self-message";
+				wrap_right_class = " alg-right"
+			}
+
+			$('#chat-content').append(
+				'<div class="message-wrapp'+wrap_right_class+'">\
+				<span class="'+msg_class+'">\
+				<span class="message-header">\
+				<span class="message-name">'+msg.user+'</span>\
+				</span>\
+				<div class="message-content">\
+				<div class="message-text">'+msg.msg+'</div>\
+				</div>\
+				</span>\
+				</div>');
+			var targt = msg.target;
+			if (chats.hasOwnProperty(targt)) {
+				chats[targt].push(msg);
+			} else {
+				chats[targt] = new Array();
+				chats[targt].push(msg);
+			}
+		} else if (msg.target == self_main_chat_name && msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat" == target_chat) {
+			var msg_class = "message";
+			var wrap_right_class = "";
+			
+			if (msg.user == user_name) {
+				msg_class = "self-message";
+				wrap_right_class = " alg-right"
+			}
+
+			$('#chat-content').append(
+				'<div class="message-wrapp'+wrap_right_class+'">\
+				<span class="'+msg_class+'">\
+				<span class="message-header">\
+				<span class="message-name">'+msg.user+'</span>\
+				</span>\
+				<div class="message-content">\
+				<div class="message-text">'+msg.msg+'</div>\
+				</div>\
+				</span>\
+				</div>');
+			var target = msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat";
+			if (chats.hasOwnProperty(target)) {
+				chats[target].push(msg);
+			} else {
+				chats[target] = new Array();
+				chats[target].push(msg);
+			}
+			/*console.log(chats);*/
+		} else if (msg.target == self_main_chat_name && msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat" != target_chat) {
+			var target = msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat";
+			if (chats.hasOwnProperty(target)) {
+				chats[target].push(msg);
+			} else {
+				chats[target] = new Array();
+				chats[target].push(msg);
+			}
+		} else if (msg.target == "main_chat" && target_chat != "main_chat") {
+			var targt = msg.target;
+			if (chats.hasOwnProperty(targt)) {
+				chats[targt].push(msg);
+			} else {
+				chats[targt] = new Array();
+				chats[targt].push(msg);
+			}
+		}
+	});
 
 	socket.on("keepAlive", function(msg) {
 		if (msg.user != user_name && $.inArray(msg.user, users_online) == -1) {
 			users_online.push(msg.user);
 			$('.chats-wrapp').append('<div id="'+msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+'_chat" class="chat-pan-content">\
-				<img class="circle chat-avatar" src="img/no-avatar.png">\
+				<img class="circle chat-avatar '+msg.stat+'" src="img/no-avatar.png">\
 				<span class="chat-name">'+msg.user+'</span>\
 				</div>'
-			)
+				)
 			$("#"+msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat").click(function(){
 				target_chat = $(this).text().toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' ).trim()+"_chat";
 				target_chat_name = msg.user;

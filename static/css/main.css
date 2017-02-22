@@ -249,3 +249,15 @@
 #main_chat {
 	border-bottom: 5px solid #666;
 }
+
+.no_molestar {
+	border: 2px solid red;
+}
+
+.online {
+	border: 2px solid green;
+}
+
+.ausente {
+	border: 2px solid orange;
+}

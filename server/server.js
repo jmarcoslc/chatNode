@@ -37,6 +37,10 @@ io.on('connection', function(socket){
     console.log('keepAlive: ' + msg.user);
     io.emit('keepAlive', msg);
   });
+  socket.on('writing', function(msg){
+    console.log('Writing: ' + msg.user);
+    io.emit('writing', msg);
+  });
 });
  
 /*io.sockets.on('connection', function(socket){
