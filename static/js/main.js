@@ -1,3 +1,7 @@
+$.fn.scrollBottom = function() { 
+    return $(document).height() - this.scrollTop() - this.height(); 
+};
+
 var user_name = "Anonymouse";
 var state = "Not specified";
 var avatar = "img/no-avatar.png";
@@ -90,6 +94,7 @@ function insertMessages(msg) {
 }
 
 $(document).ready(function() {
+
 	var socket = io();
 	$('.modal').modal();
 	$('#modal1').modal('open');
@@ -199,6 +204,9 @@ $(document).ready(function() {
 				chats[targt].push(msg);
 			}
 		}
+
+		var container = $("#chat-content");
+		container.animate({"scrollTop":container[0].scrollHeight}, 200);
 	});
 
 	socket.on("keepAlive", function(msg) {
@@ -215,7 +223,14 @@ $(document).ready(function() {
 				target_chat_name = msg.user;
 				changeChat();
 			});
-			Materialize.toast(msg.user + ' se ha conectado', 3000, 'rounded')
+			Materialize.toast(msg.user + ' se ha conectado', 3000, 'rounded');
 		}
+	});
+
+	socket.on("user_disconected", function(msg) {
+		delete chats[msg.user];
+		console.log(chats);
+		Materialize.toast(msg.user + ' se ha desconectado', 3000, 'rounded');
+		$("#"+msg.user.toLowerCase().replace(/\s/g, '').replace( /[^-A-Za-z0-9]+/g, '-' )+"_chat").remove();
 	});
 });

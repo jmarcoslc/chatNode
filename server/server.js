@@ -27,6 +27,7 @@ io.on('connection', function(socket){
   });
   console.log('User conected');
   socket.on('disconnect', function(){
+  	io.emit('user_disconected', {user:socket.name});
     console.log('User disconnected');
   });
   socket.on('chat_message', function(msg){
@@ -35,6 +36,7 @@ io.on('connection', function(socket){
   });
   socket.on('keepAlive', function(msg){
     console.log('keepAlive: ' + msg.user);
+    socket.name = msg.user;
     io.emit('keepAlive', msg);
   });
   socket.on('writing', function(msg){

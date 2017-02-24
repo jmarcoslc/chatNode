@@ -70,7 +70,7 @@
 
 .avatar, .chat-avatar {
 	height: 6.5vh;
-	width: : 6.5vh;
+	width: 6.5vh;
 	background-color: #FFF;
 	position: relative;
 	top: calc(50% - 3.5vh);
@@ -142,6 +142,7 @@
 .message-header, .message-content {
 	display: block;
 	text-align: left;
+	word-break: break-all;
 }
 
 .message-name {
@@ -158,10 +159,12 @@
 
 .message {
 	background-color: #FFF;
+	max-width: 50%;
 }
 
 .self-message {
 	background-color: #dcf8c6;
+	max-width: 50%;
 }
 
 /*.message::after {
